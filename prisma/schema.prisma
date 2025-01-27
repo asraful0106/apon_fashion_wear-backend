@@ -1,0 +1,45 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  user_id String @id @default(uuid())
+  name String
+  phone_number String
+  email String
+  password_hash String
+  image String?
+  isVarified Boolean @default(false)
+  role Role @default(user)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  // Relationship
+  addresses Address[] 
+
+}
+// enum for User role
+enum Role{
+  user
+  admin
+  selsman
+}
+model Address{
+  id String @id @default(uuid())
+  address String
+  user_id   String
+  
+  //  Relation
+  user      User   @relation(fields: [user_id], references: [user_id])
+}
