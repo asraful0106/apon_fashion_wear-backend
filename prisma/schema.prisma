@@ -4,6 +4,8 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// npx prisma migrate dev --name changedName  ---> to migrate into db
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,33 +15,61 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  user_id String @id @default(uuid())
-  name String
-  phone_number String
-  email String
-  password_hash String
-  image String?
-  isVarified Boolean @default(false)
-  role Role @default(user)
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+
+// Category Table
+model Category {
+  category_id Int @id @default(autoincrement())
+  category_name String
+  category_image String
 
   // Relationship
-  addresses Address[] 
-
+  sub_category SubCategory[]
 }
+
+model SubCategory {
+  sub_category_id Int @id @default(autoincrement())
+  sub_category_name String
+  sub_category_image String
+  category_id Int
+
+  // Relation
+  categroy Category @relation(fields: [category_id], references: [category_id])
+}
+
+// User Table
+model User {
+  user_id                  String   @id @default(uuid())
+  name                     String
+  phone_number             String
+  email                    String
+  password_hash            String
+  image                    String?
+  isVarified               Boolean  @default(false)
+  is_valid_password_change Boolean  @default(false)
+  role                     Role     @default(user)
+  created_at               DateTime @default(now())
+  updated_at               DateTime @updatedAt
+
+  // Relationship
+  addresses Address[]
+}
+
 // enum for User role
-enum Role{
+enum Role {
   user
   admin
   selsman
 }
-model Address{
-  id String @id @default(uuid())
+
+// Address table
+model Address {
+  id      String @id @default(uuid())
   address String
-  user_id   String
-  
+  user_id String
+
   //  Relation
-  user      User   @relation(fields: [user_id], references: [user_id])
+  user User @relation(fields: [user_id], references: [user_id])
 }
+
+
+// Otp table
