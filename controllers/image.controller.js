@@ -6,8 +6,8 @@ import fse from "fs-extra";
 // Get current directory path using ES module method
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const uploadsDir = path.join(__dirname, "uploads");
-const cacheDir = path.join(__dirname, "cache_memory");
+const uploadsDir = path.join(__dirname, 'public', 'uploads');
+const cacheDir = path.join(__dirname, 'public', 'cache_memory');
 
 // Ensure the directories exist
 fse.ensureDirSync(uploadsDir);
