@@ -1,5 +1,6 @@
 import express from 'express';
 import categoryRouter from './routes/category.route.js';
+import imageRouter from './routes/image.route.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,7 +14,9 @@ app.get('/', (req, res) => {
     res.send('Web app is running!');
 });
 
-//All request that come to category will handle by the "categoryRouter"
+//All request that come to "category" will handle by the "categoryRouter"
 app.use('/category', categoryRouter);
+// All request that come to "image" will handle by the "imageRouter"
+app.use('/image', imageRouter);
 
 app.listen(PORT, () => console.log(`App is running at PORT: ${PORT}`));

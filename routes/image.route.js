@@ -1,8 +1,11 @@
 import express from "express";
+import { getImage } from "../controllers/image.controller.js";
 
 const imageRouter = express.Router();
 
-//(POST) To upload image or other file
-imageRouter.post("/upload", (req, res) =>{
-    
-})
+//(GET) To get image and modify it on the fly
+imageRouter.get("/:image_name", async(req, res) =>{
+    getImage(req, res);
+});
+
+export default imageRouter;

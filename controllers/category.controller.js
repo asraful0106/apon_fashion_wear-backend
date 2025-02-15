@@ -25,17 +25,17 @@ const upload = multer({ storage });
 
 
 //(GET) Controlers for getting the category from the db
-const getCategory = async (req, res) =>{
-    try{
+const getCategory = async (req, res) => {
+    try {
         const category = await prisma.category.findMany({});
         res.status(200).send(category);
-    }catch(err){
-        res.status(500).json({messege : "Internal server error"});
+    } catch (err) {
+        res.status(500).json({ messege: "Internal server error" });
     }
 }
 
 //(POST) Controlers for creating the category in the db
-const creatCetegory = async (req, res) =>{
+const creatCetegory = async (req, res) => {
     upload.single('category_image')(req, res, async (err) => {
         if (err) {
             return res.status(500).json({ message: "File upload failed", error: err });
@@ -48,22 +48,24 @@ const creatCetegory = async (req, res) =>{
         // getting the category from the header
         const { category_name } = req.body;
         // chacking is all information is given or not
-        if(!category_name){
-            res.status(424).json({message: "All the information is needed!"})
+        if (!category_name) {
+            res.status(424).json({ message: "All the information is needed!" })
         }
-        const image_path = `/uploads/${req.file.filename}`;
 
-        try{
+        // const image_path = `/uploads/${req.file.filename}`;
+        const image_path = req.file.filename;
+
+        try {
             const category = await prisma.category.create({
-                data:{
+                data: {
                     category_name: category_name,
                     category_image: image_path
                 }
             });
 
             res.status(201).send(category);
-        }catch(err){
-            res.status(500).json({message:"Internal server error!"});
+        } catch (err) {
+            res.status(500).json({ message: "Internal server error!" });
         }
     });
 }
