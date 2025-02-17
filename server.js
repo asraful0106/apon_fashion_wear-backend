@@ -1,6 +1,7 @@
 import express from 'express';
 import categoryRouter from './routes/category.route.js';
 import imageRouter from './routes/image.route.js';
+import cleanupCache from './job/cache_cleanup.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -19,4 +20,7 @@ app.use('/category', categoryRouter);
 // All request that come to "image" will handle by the "imageRouter"
 app.use('/image', imageRouter);
 
+
+// Clean up work
+cleanupCache();
 app.listen(PORT, () => console.log(`App is running at PORT: ${PORT}`));
