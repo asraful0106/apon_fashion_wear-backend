@@ -15,7 +15,6 @@ const CACHE_LIMIT_MB = 1500; // Set max cache size (adjust as needed)
 const cleanupCache = () => {
     fse.readdir(cacheDir, (err, files) => {
         if (err) return;
-        console.log("Working");
         let totalSize = 0;
         const filePaths = files.map(file => path.join(cacheDir, file));
 

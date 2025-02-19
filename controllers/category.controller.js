@@ -27,7 +27,11 @@ const upload = multer({ storage });
 //(GET) Controlers for getting the category from the db
 const getCategory = async (req, res) => {
     try {
-        const category = await prisma.category.findMany({});
+        const category = await prisma.category.findMany({
+            include:{
+                sub_category:true // Load related subCategoies
+            }
+        });
         res.status(200).send(category);
     } catch (err) {
         res.status(500).json({ messege: "Internal server error" });
@@ -70,4 +74,40 @@ const creatCetegory = async (req, res) => {
     });
 }
 
-export { getCategory, creatCetegory };
+const createSubCategory = async(req, res) =>{
+    upload.single('sub_category_image')(req, res, async (err) => {
+        if (err) {
+            return res.status(500).json({ message: "File upload failed", error: err });
+        }
+
+        if (!req.file) {
+            return res.status(400).json({ message: "No file uploaded" });
+        }
+
+        // getting the sub-category from the header
+        const { sub_category_name, category_id } = req.body;
+        // chacking is all information is given or not
+        if (!sub_category_name && !category_id) {
+            res.status(424).json({ message: "All the information is needed!" })
+        }
+
+        //getting the iamge path
+        const image_path = req.file.filename;
+
+        try {
+            const subCategory = await prisma.subCategory.create({
+                data: {
+                    category_id: parseInt(category_id),
+                    sub_category_name,
+                    sub_category_image: image_path
+                }
+            });
+
+            res.status(201).send(subCategory);
+        } catch (err) {
+            res.status(400).json({ message: "Category not found!" });
+        }
+    })
+}
+
+export { getCategory, creatCetegory, createSubCategory };

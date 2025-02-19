@@ -1,5 +1,5 @@
 import express from "express";
-import { getCategory, creatCetegory } from "../controllers/category.controller.js";
+import { getCategory, creatCetegory, createSubCategory } from "../controllers/category.controller.js";
 
 const categoryRouter = express.Router();
 
@@ -11,6 +11,11 @@ categoryRouter.get("/",async(req, res) =>{
 // this route is for creating the category
 categoryRouter.post("/", async(req, res) =>{
     creatCetegory(req, res);
-})
+});
+
+// this route is for creating sub categorys
+categoryRouter.post("/sub-category", async(req, res) =>{
+    createSubCategory(req, res);
+});
 
 export default categoryRouter;
