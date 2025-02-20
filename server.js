@@ -2,6 +2,7 @@ import express from 'express';
 import categoryRouter from './routes/category.route.js';
 import imageRouter from './routes/image.route.js';
 import cleanupCache from './job/cache_cleanup.js';
+import cors from 'cors';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -10,6 +11,8 @@ const PORT = process.env.PORT || 3001;
 app.use(express.json());
 // Use express.urlencoded() for parsing URL-encoded data
 app.use(express.urlencoded({ extended: false }));
+// CORS policy
+app.use(cors());
 
 app.get('/', (req, res) => {
     res.send('Web app is running!');
