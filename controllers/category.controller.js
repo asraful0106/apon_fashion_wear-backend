@@ -67,7 +67,7 @@ const creatCetegory = async (req, res) => {
                 }
             });
 
-            res.status(201).send(category);
+            res.status(201).json({category});
         } catch (err) {
             res.status(500).json({ message: "Internal server error!" });
         }

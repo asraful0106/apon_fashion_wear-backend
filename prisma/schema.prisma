@@ -15,7 +15,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
+// -----------------------------------Category and Sub-category features -----------------------------------
 // Category Table
 model Category {
   category_id Int @id @default(autoincrement())
@@ -26,6 +26,7 @@ model Category {
   sub_category SubCategory[]
 }
 
+// Subcategory table
 model SubCategory {
   sub_category_id Int @id @default(autoincrement())
   sub_category_name String
@@ -35,7 +36,14 @@ model SubCategory {
   // Relation
   categroy Category @relation(fields: [category_id], references: [category_id])
 }
+// ---------------------------Hero Section and Banner Section----------------------
+// Banaer Table
+model Banner {
+  banner_id Int @id @default(autoincrement())
+  banner_image String
+}
 
+// ----------------------------User features-------------------------------
 // User Table
 model User {
   user_id                  String   @id @default(uuid())
@@ -65,6 +73,7 @@ enum Role {
 model Address {
   id      String @id @default(uuid())
   address String
+  isDeafult Boolean @default(false)
   user_id String
 
   //  Relation
