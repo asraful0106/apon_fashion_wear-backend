@@ -15,27 +15,102 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// -----------------------------------Category and Sub-category features -----------------------------------
-// Category Table
+// -----------------------------------Category and Subcategory -----------------------------------
 model Category {
-  category_id Int @id @default(autoincrement())
+  category_id   Int          @id @default(autoincrement())
   category_name String
   category_image String
 
-  // Relationship
-  sub_category SubCategory[]
+  // Relations
+  sub_categories SubCategory[]
+  products       Product[]
 }
 
-// Subcategory table
 model SubCategory {
-  sub_category_id Int @id @default(autoincrement())
+  sub_category_id   Int      @id @default(autoincrement())
   sub_category_name String
   sub_category_image String
-  category_id Int
+  category_id       Int
+
+  // Relations
+  category Category @relation(fields: [category_id], references: [category_id])
+  products Product[]
+}
+
+// ----------------------Product----------------------------
+model Product {
+  product_id  Int       @id @default(autoincrement())
+  name        String
+  description String
+  price       Decimal   @db.Decimal(10, 2)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  // Relations
+  colors      Color[]
+  category_id Int?
+  sub_category_id Int?  // Now a product can be under a sub-category
+  category    Category? @relation(fields: [category_id], references: [category_id])
+  subCategory SubCategory? @relation(fields: [sub_category_id], references: [sub_category_id])
+  reviews     Review[]
+}
+
+// ----------------------Product Color Table----------------------------
+model Color {
+  color_id   Int      @id @default(autoincrement())
+  name       String
+  product_id Int
+  product    Product  @relation(fields: [product_id], references: [product_id])
+
+  // Relations
+  images      Image[]
+  inventories Inventory[]
+}
+
+// ----------------------Product Image Table----------------------------
+model Image {
+  image_id Int    @id @default(autoincrement())
+  image_url String
 
   // Relation
-  categroy Category @relation(fields: [category_id], references: [category_id])
+  color_id Int
+  color    Color @relation(fields: [color_id], references: [color_id])
 }
+
+// ----------------------Product Inventory Table----------------------------
+model Inventory {
+  inventory_id     Int  @id @default(autoincrement())
+  product_quantity Int
+
+  // Relations
+  color_id Int
+  color    Color @relation(fields: [color_id], references: [color_id])
+  size_id  Int
+  size     Size @relation(fields: [size_id], references: [size_id])
+}
+
+// ----------------------Product Size Table----------------------------
+model Size {
+  size_id   Int    @id @default(autoincrement())
+  name      String
+  inventories Inventory[]
+}
+
+// ----------------------Review Table----------------------------
+model Review {
+  review_id  Int      @id @default(autoincrement())
+  rating     Int
+  user_id    String
+  product_id Int
+  comment    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  user User  @relation(fields: [user_id], references: [user_id])
+  product Product @relation(fields: [product_id], references: [product_id])
+}
+
 // ---------------------------Hero Section and Banner Section----------------------
 // Banaer Table
 model Banner {
@@ -60,6 +135,7 @@ model User {
 
   // Relationship
   addresses Address[]
+  reviews Review[]
 }
 
 // enum for User role
