@@ -4,6 +4,7 @@ import imageRouter from './routes/image.route.js';
 import cleanupCache from './job/cache_cleanup.js';
 import bannerRouter from './routes/banner.route.js';
 import cors from 'cors';
+import productRouter from './routes/product.route.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -25,6 +26,8 @@ app.use('/category', categoryRouter);
 app.use('/banner', bannerRouter);
 // All request that come to "image" will handle by the "imageRouter"
 app.use('/image', imageRouter);
+// All request that come to "product" will handel by the "productRouter"
+app.use('/product', productRouter)
 
 
 // Clean up work

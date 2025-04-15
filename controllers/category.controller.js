@@ -67,7 +67,7 @@ const creatCetegory = async (req, res) => {
                 }
             });
 
-            res.status(201).json({category});
+            res.status(201).json({category}); 
         } catch (err) {
             res.status(500).json({ message: "Internal server error!" });
         }
@@ -84,7 +84,7 @@ const createSubCategory = async(req, res) =>{
             return res.status(400).json({ message: "No file uploaded" });
         }
 
-        // getting the sub-category from the header
+        // getting the sub-category from the header 
         const { sub_category_name, category_id } = req.body;
         // chacking is all information is given or not
         if (!sub_category_name && !category_id) {
