@@ -45,6 +45,7 @@ model Product {
   price           Decimal  @db.Decimal(10, 2)
   offer_price     Decimal? @db.Decimal(10, 2)
   accept_preorder Boolean  @default(false)
+  is_fetured      Boolean  @default(false)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -57,7 +58,7 @@ model Product {
   reviews         Review[]
 }
 
-// ----------------------Product Color Table----------------------------
+// ----------------------Product Color Table---------------------------- 
 model Color {
   color_id   Int     @id @default(autoincrement())
   name       String
