@@ -128,12 +128,12 @@ const createNewProduct = async (req, res) => {
 }
 
 // Product Update API
-const updateProduct = async (req, res) =>{
-    const {product_id} = req.params;
-    if(!product_id){
-        return res.status(404).json({message:"Product id is required!"});
+const updateProduct = async (req, res) => {
+    const { product_id } = req.params;
+    if (!product_id) {
+        return res.status(404).json({ message: "Product id is required!" });
     }
-    const {name, description, price, offer_price, accept_preorder, is_fetured, category_id, sub_category_id, colors} = req.body;
+    const { name, description, price, offer_price, accept_preorder, is_fetured, category_id, sub_category_id, colors } = req.body;
 
     if (!name, !description, !price, !category_id, !colors) {
         return res.status(404).json({ "message": "Please fill all the fields!" });
@@ -144,8 +144,8 @@ const updateProduct = async (req, res) =>{
             where: { product_id },
         });
 
-        if(!existingProduct){
-            return res.status(404).json({messgae: "Product not found"});
+        if (!existingProduct) {
+            return res.status(404).json({ messgae: "Product not found" });
         }
         // Validate input if provided
         if (colors && (!Array.isArray(colors) || colors.length === 0)) {
@@ -209,18 +209,18 @@ const updateProduct = async (req, res) =>{
                         // Delete existing colors and their related images and inventories
                         deleteMany: {},
                         // Create new colors
-                        create: colors.map((color) => ({
-                            name: color.name,
+                        create: colors?.map((color) => ({
+                            name: color?.name,
                             images: {
-                                create: color.images?.map((image) => ({
-                                    image_url: image.url,
+                                create: color?.images?.map((image) => ({
+                                    image_url: image?.url,
                                 })) || [],
                             },
                             inventories: {
-                                create: color.inventories?.map((inventory) => ({
-                                    product_quantity: inventory.quantity,
+                                create: color?.inventories?.map((inventory) => ({
+                                    product_quantity: inventory?.quantity,
                                     size: {
-                                        connect: { size_id: inventory.size_id },
+                                        connect: { size_id: inventory?.size_id },
                                     },
                                 })) || [],
                             },
@@ -257,4 +257,29 @@ const updateProduct = async (req, res) =>{
     }
 }
 
-export { getProduct, createNewProduct };
+// Product Delete API
+const deleteProduct = async (req, res) => {
+    const { product_id } = req.body;
+    if (!product_id) {
+        return res.status(404).json({ message: "Product Id is required!" });
+    }
+
+    try {
+        const existingProduct = await prisma.product.findUnique({
+            where: { product_id },
+        });
+        if (!existingProduct) {
+            return res.status(404).json({ message: "Product not found!" });
+        }
+        // Delete the product (related colors, images, inventories, and reviews are handled by cascading deletes)
+        await prisma.product.delete({
+            where: { product_id },
+        });
+        res.status(204).json({ message: "Product deleted successfully!" });
+    } catch (err) {
+        console.error('Product Delete Error: ', err);
+        res.status(500).json({ message: 'Internal Server Error!' });
+    }
+}
+
+export { getProduct, createNewProduct, updateProduct, deleteProduct };
