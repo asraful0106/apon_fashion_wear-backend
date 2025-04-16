@@ -29,11 +29,12 @@ const getCategory = async (req, res) => {
     try {
         const category = await prisma.category.findMany({
             include:{
-                sub_category:true // Load related subCategoies
+                sub_categories:true // Load related subCategoies
             }
         });
         res.status(200).send(category);
     } catch (err) {
+        console.log(err);
         res.status(500).json({ messege: "Internal server error" });
     }
 }

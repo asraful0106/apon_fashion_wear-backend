@@ -18,7 +18,7 @@ const getProduct = async (req, res) => {
                     select: { category_name: true },
                 },
                 subCategory: {
-                    select: { subCategory_name: true },
+                    select: { sub_category_name: true },
                 },
                 colors: {
                     include: {
@@ -129,7 +129,7 @@ const createNewProduct = async (req, res) => {
 
 // Product Update API
 const updateProduct = async (req, res) => {
-    const { product_id } = req.params;
+    const product_id  = req.params.id;
     if (!product_id) {
         return res.status(404).json({ message: "Product id is required!" });
     }
@@ -250,6 +250,7 @@ const updateProduct = async (req, res) => {
             },
         });
 
+        res.status(202).json(updatedProduct);
 
     } catch (err) {
         console.error('Product Update Error: ', err);

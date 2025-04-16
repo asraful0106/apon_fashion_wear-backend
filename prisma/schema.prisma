@@ -63,7 +63,7 @@ model Color {
   color_id   Int     @id @default(autoincrement())
   name       String
   product_id String
-  product    Product @relation(fields: [product_id], references: [product_id])
+  product    Product @relation(fields: [product_id], references: [product_id], onDelete: Cascade)
 
   // Relations
   images      Image[]
@@ -77,7 +77,7 @@ model Image {
 
   // Relation
   color_id Int
-  color    Color @relation(fields: [color_id], references: [color_id])
+  color    Color @relation(fields: [color_id], references: [color_id], onDelete: Cascade)
 }
 
 // ----------------------Product Inventory Table----------------------------
@@ -87,7 +87,7 @@ model Inventory {
 
   // Relations
   color_id Int
-  color    Color @relation(fields: [color_id], references: [color_id])
+  color    Color @relation(fields: [color_id], references: [color_id], onDelete: Cascade)
   size_id  Int
   size     Size  @relation(fields: [size_id], references: [size_id])
 }
